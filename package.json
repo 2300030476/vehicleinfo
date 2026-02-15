@@ -1,0 +1,19 @@
+{
+  "name": "vehicleinfo-erp",
+  "version": "1.0.0",
+  "description": "Private vehicle ERP portal",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js",
+    "check": "node --check src/server.js && node --check src/db.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.6.0",
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1"
+  }
+}

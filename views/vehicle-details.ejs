@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Vehicle Details - <%= vehicle.vehicle_number %></title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1><%= vehicle.vehicle_number %></h1>
+  <a href="/dashboard">← Back to Dashboard</a>
+</header>
+<main>
+  <section class="card">
+    <h2>Basic Vehicle Details</h2>
+    <div class="grid-2">
+      <p><strong>Owner:</strong> <%= vehicle.owner_name %></p>
+      <p><strong>RTO:</strong> <%= vehicle.rto %></p>
+      <p><strong>Registration Date:</strong> <%= vehicle.registration_date %></p>
+      <p><strong>Engine Number:</strong> <%= vehicle.engine_number %></p>
+      <p><strong>Chassis Number:</strong> <%= vehicle.chassis_number %></p>
+      <p><strong>Fuel Type:</strong> <%= vehicle.fuel_type %></p>
+      <p><strong>Model:</strong> <%= vehicle.model %></p>
+      <p><strong>Year:</strong> <%= vehicle.manufacture_year %></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Tax Details</h2>
+    <table>
+      <tr><th>Type</th><th>Amount</th><th>Paid</th><th>Expiry</th><th>Status</th><th>Receipt</th></tr>
+      <% taxes.forEach(t => { %>
+      <tr>
+        <td><%= t.tax_type %></td><td>₹<%= t.amount_paid %></td><td><%= t.paid_date %></td><td><%= t.expiry_date %></td><td><%= t.status %></td>
+        <td><% if (t.receipt_file) { %><a href="/files/<%= t.receipt_file %>">Download</a><% } else { %>-<% } %></td>
+      </tr>
+      <% }) %>
+    </table>
+    <h3>Add Tax Payment</h3>
+    <form method="post" action="/vehicles/<%= vehicle.id %>/tax" enctype="multipart/form-data" class="stack">
+      <select name="tax_type" required><option>lifetime</option><option>yearly</option><option>quarterly</option></select>
+      <input type="number" step="0.01" name="amount_paid" placeholder="Tax amount" required>
+      <input type="date" name="paid_date" required>
+      <input type="date" name="expiry_date" required>
+      <input type="file" name="receipt" accept="application/pdf">
+      <button>Add Tax Record</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Insurance Details</h2>
+    <table>
+      <tr><th>Company</th><th>Policy</th><th>Start</th><th>End</th><th>Copy</th></tr>
+      <% insurances.forEach(i => { %>
+      <tr>
+        <td><%= i.insurance_company %></td><td><%= i.policy_number %></td><td><%= i.start_date %></td><td><%= i.end_date %></td>
+        <td><% if (i.insurance_file) { %><a href="/files/<%= i.insurance_file %>">Download</a><% } else { %>-<% } %></td>
+      </tr>
+      <% }) %>
+    </table>
+    <h3>Add Insurance Record</h3>
+    <form method="post" action="/vehicles/<%= vehicle.id %>/insurance" enctype="multipart/form-data" class="stack">
+      <input name="insurance_company" placeholder="Insurance company" required>
+      <input name="policy_number" placeholder="Policy number" required>
+      <input type="date" name="start_date" required>
+      <input type="date" name="end_date" required>
+      <input type="file" name="insurance_file" accept="application/pdf,image/*">
+      <button>Add Insurance</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Documents (RC/Permit/FC/Pollution/Other)</h2>
+    <table>
+      <tr><th>Type</th><th>Title</th><th>Issue</th><th>Expiry</th><th>View/Download</th></tr>
+      <% docs.forEach(d => { %>
+      <tr>
+        <td><%= d.doc_type %></td><td><%= d.title || '-' %></td><td><%= d.issue_date || '-' %></td><td><%= d.expiry_date || '-' %></td>
+        <td><% if (d.file_path) { %><a href="/files/<%= d.file_path %>">Download</a><% } else { %>-<% } %></td>
+      </tr>
+      <% }) %>
+    </table>
+    <h3>Upload Document</h3>
+    <form method="post" action="/vehicles/<%= vehicle.id %>/document" enctype="multipart/form-data" class="stack">
+      <select name="doc_type" required>
+        <option>RC</option><option>Permit</option><option>Fitness Certificate</option><option>Pollution</option><option>Other</option>
+      </select>
+      <input name="title" placeholder="Document title">
+      <input type="date" name="issue_date">
+      <input type="date" name="expiry_date">
+      <input type="file" name="doc_file" required>
+      <button>Upload Document</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>History Log</h2>
+    <table>
+      <tr><th>Event</th><th>Date</th><th>Notes</th></tr>
+      <% history.forEach(h => { %>
+      <tr><td><%= h.event_type %></td><td><%= h.event_date %></td><td><%= h.notes %></td></tr>
+      <% }) %>
+    </table>
+  </section>
+</main>
+</body>
+</html>
