@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Dashboard - Private Vehicle ERP</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>Vehicle ERP Dashboard</h1>
+  <div>
+    <span>Welcome, <%= username %></span>
+    <form method="post" action="/logout" style="display:inline"><button>Logout</button></form>
+  </div>
+</header>
+<main>
+  <section class="card">
+    <h2>Global Search</h2>
+    <form method="get" action="/dashboard" class="search-row">
+      <input type="text" name="q" value="<%= q %>" placeholder="Search by vehicle no / partial / engine / chassis">
+      <button type="submit">Search</button>
+    </form>
+    <ul>
+      <% vehicles.forEach(v => { %>
+        <li><a href="/vehicles/<%= v.id %>"><strong><%= v.vehicle_number %></strong></a> - <%= v.model %> | Engine: <%= v.engine_number %></li>
+      <% }) %>
+      <% if (vehicles.length === 0) { %><li>No vehicles found.</li><% } %>
+    </ul>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h2>Expiry Alerts (within 30 days)</h2>
+      <ul>
+        <% alerts30.forEach(a => { %>
+          <li><strong><%= a.vehicle_number %></strong> - <%= a.alert_type %> expires in <%= a.days_left %> day(s) (<%= a.expiry_date %>)</li>
+        <% }) %>
+        <% if (alerts30.length === 0) { %><li>No upcoming expiries in 30 days.</li><% } %>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Critical Alerts (within 7 days)</h2>
+      <ul>
+        <% alerts7.forEach(a => { %>
+          <li><strong><%= a.vehicle_number %></strong> - <%= a.alert_type %> expires in <%= a.days_left %> day(s) (<%= a.expiry_date %>)</li>
+        <% }) %>
+        <% if (alerts7.length === 0) { %><li>No critical expiries in 7 days.</li><% } %>
+      </ul>
+    </div>
+  </section>
+</main>
+</body>
+</html>
